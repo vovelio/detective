@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools==84.2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "detective"
+version = "0.0.1"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "jsonschema==4.23.0", "Pillow==13.0.0", "fastapi==0.135.0",
+  "SQLAlchemy[asyncio]==2.0.41", "asyncpg==0.30.0", "alembic==1.16.1",
+  "uvicorn==0.34.2", "pydantic==2.14.3", "websockets==15.0.1",
+  "python-multipart==0.0.34", "starlette==1.10.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.5", "ruff==0.11.10", "mypy==1.15.0", "types-jsonschema==4.23.0.20241208", "httpx==0.28.1", "pytest-asyncio==0.26.0"]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+
+[tool.setuptools.package-data]
+"detective.scenarios" = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["backend"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+

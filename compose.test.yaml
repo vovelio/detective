@@ -1,0 +1,16 @@
+# Isolated loopback TLS. Never use this override for a public deployment.
+services:
+  api:
+    environment:
+      ALLOWED_ORIGINS: https://${PUBLIC_DOMAIN:-localhost}:${HTTPS_PORT:-8443}
+  migrate:
+    environment:
+      ALLOWED_ORIGINS: https://${PUBLIC_DOMAIN:-localhost}:${HTTPS_PORT:-8443}
+  cases-init:
+    environment:
+      ALLOWED_ORIGINS: https://${PUBLIC_DOMAIN:-localhost}:${HTTPS_PORT:-8443}
+  proxy:
+    environment:
+      HTTPS_PORT: ${HTTPS_PORT:-8443}
+    volumes:
+      - ./infra/Caddyfile.test:/etc/caddy/Caddyfile:ro

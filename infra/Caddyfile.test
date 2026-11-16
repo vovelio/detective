@@ -1,0 +1,52 @@
+{
+    admin localhost:2019
+    log default {
+        exclude http.log.error http.log.access
+    }
+    servers {
+        timeouts {
+            read_header 10s
+            read_body 45s
+            idle 2m
+        }
+    }
+    auto_https disable_redirects
+    skip_install_trust
+}
+
+:8081 {
+    bind 127.0.0.1
+    respond /health/live "ok" 200
+}
+
+http://{$PUBLIC_DOMAIN} {
+    redir https://{$PUBLIC_DOMAIN}:{$HTTPS_PORT}{uri} 308
+}
+
+https://{$PUBLIC_DOMAIN} {
+    tls internal
+    encode zstd gzip
+    header {
+        -Server
+        X-Content-Type-Options nosniff
+        Referrer-Policy no-referrer
+        X-Frame-Options DENY
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' wss://{$PUBLIC_DOMAIN}:{$HTTPS_PORT}; object-src 'none'; frame-ancestors 'none'; base-uri 'none'"
+    }
+    @backend path /api/* /ws/* /health/live /health/ready
+    handle @backend {
+        request_body {
+            max_size 21037056
+        }
+        reverse_proxy api:8000 {
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    handle {
+        root * /srv
+        try_files {path} /index.html
+        header Cache-Control "no-cache"
+        file_server
+    }
+}

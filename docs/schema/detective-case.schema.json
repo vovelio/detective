@@ -1,0 +1,528 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/detective-case/1.0.0/schema",
+  "title": "Detective case package manifest",
+  "description": "Strict scenario structure. Cross-reference and story logic are checked by a second semantic validator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "id",
+    "meta",
+    "intro",
+    "start_card",
+    "play_cards",
+    "questions",
+    "solution",
+    "scoring",
+    "assets"
+  ],
+  "properties": {
+    "format": {
+      "const": "detective-case"
+    },
+    "format_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "minLength": 2,
+      "maxLength": 100
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "author",
+        "summary",
+        "difficulty",
+        "estimated_minutes",
+        "language",
+        "min_players",
+        "max_players",
+        "original_work"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 180
+        },
+        "author": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 160
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 1500
+        },
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ]
+        },
+        "estimated_minutes": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 180
+        },
+        "language": {
+          "const": "ru-RU"
+        },
+        "min_players": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 8
+        },
+        "max_players": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 8
+        },
+        "original_work": {
+          "const": true
+        }
+      }
+    },
+    "intro": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "public_goal"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30000
+        },
+        "public_goal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30000
+        }
+      }
+    },
+    "start_card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "blocks"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "segments"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "text"
+                  },
+                  "segments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 80,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "text"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 30000
+                        },
+                        "shareable": {
+                          "type": "string",
+                          "enum": [
+                            "highlight",
+                            "clip"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "asset_id",
+                  "caption"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "image"
+                  },
+                  "asset_id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]*$",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "caption": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30000
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "play_cards": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "blocks",
+          "role",
+          "logic_notes",
+          "supports_questions"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 200
+          },
+          "blocks": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type",
+                    "segments"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "text"
+                    },
+                    "segments": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 80,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "text"
+                        ],
+                        "properties": {
+                          "text": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30000
+                          },
+                          "shareable": {
+                            "type": "string",
+                            "enum": [
+                              "highlight",
+                              "clip"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type",
+                    "asset_id",
+                    "caption"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "image"
+                    },
+                    "asset_id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "minLength": 2,
+                      "maxLength": 100
+                    },
+                    "caption": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 30000
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "kind": {
+            "enum": [
+              "testimony",
+              "document",
+              "photo",
+              "object",
+              "report",
+              "other"
+            ]
+          },
+          "role": {
+            "enum": [
+              "essential",
+              "supporting",
+              "red_herring"
+            ]
+          },
+          "logic_notes": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30000
+          },
+          "supports_questions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "minLength": 2,
+              "maxLength": 100
+            }
+          }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text",
+          "options",
+          "correct_option_id",
+          "explanation",
+          "evidence_card_ids"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30000
+          },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "text"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-e]$"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 30000
+                }
+              }
+            }
+          },
+          "correct_option_id": {
+            "type": "string",
+            "pattern": "^[a-e]$"
+          },
+          "explanation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30000
+          },
+          "evidence_card_ids": {
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "minLength": 2,
+              "maxLength": 100
+            }
+          }
+        }
+      }
+    },
+    "solution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_story",
+        "timeline",
+        "reveal_notes"
+      ],
+      "properties": {
+        "full_story": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30000
+        },
+        "timeline": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "when",
+              "event"
+            ],
+            "properties": {
+              "when": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 30000
+              },
+              "event": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 30000
+              }
+            }
+          }
+        },
+        "reveal_notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30000
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "points_per_correct",
+        "penalty_per_irrelevant_revealed",
+        "minimum_discards",
+        "penalty_per_missing_discard"
+      ],
+      "properties": {
+        "points_per_correct": {
+          "const": 2
+        },
+        "penalty_per_irrelevant_revealed": {
+          "const": 1
+        },
+        "minimum_discards": {
+          "const": 6
+        },
+        "penalty_per_missing_discard": {
+          "const": 3
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "path",
+          "mime",
+          "alt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^assets/[A-Za-z0-9_-]+[.](png|jpg|jpeg|webp)$"
+          },
+          "mime": {
+            "enum": [
+              "image/png",
+              "image/jpeg",
+              "image/webp"
+            ]
+          },
+          "alt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30000
+          }
+        }
+      }
+    }
+  }
+}
