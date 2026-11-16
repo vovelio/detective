@@ -11,6 +11,22 @@
 Запуск интерфейса на macOS: [docs/LOCAL_UI.md](docs/LOCAL_UI.md). Локальный запуск: [docs/LOCAL_API.md](docs/LOCAL_API.md).
 Контракты: [ядро](docs/GAME_ENGINE.md), [API и хранение](docs/API.md).
 
+## Локальный запуск через Docker
+
+Запустите Docker Desktop. Из корня проекта:
+
+```sh
+make start        # подготовить настройки при первом запуске, собрать, применить миграции и запустить
+make stop         # остановить всё, сохранив базу и загруженные дела
+make restart-api  # перезапустить только API
+```
+
+Игра: https://localhost:8443 (локальный сертификат может вызвать предупреждение браузера).
+Нужны `make` и Python 3.13. Повторный `make start` использует прежние настройки и данные.
+Команды используют `.local/docker-test.env` и отдельный Docker-проект
+`detective-test-manual`, как в [DOCKER_OPERATIONS.md](docs/DOCKER_OPERATIONS.md).
+Нативный запуск через Vite использует другую базу; комнаты автоматически не переносятся.
+
 ## Локальная проверка (macOS / Linux)
 
 Нужны Python 3.13.3, Node 24.15.0 и npm 11.12.1.

@@ -47,6 +47,11 @@ token_hash_pepper. Переменные Compose содержат только п
 
 ## Новый локальный TLS-стенд
 
+Короткие команды из корня репозитория: `make start`, `make stop`, `make restart-api`.
+`make start` автоматически выполняет приведённый ниже `init`, если
+`.local/docker-test.env` ещё не существует, затем `start`. Используется проект
+`detective-test-manual`; Docker Desktop должен быть запущен. Остановка сохраняет тома.
+
 Из корня репозитория:
 
 ```sh
